@@ -1,0 +1,17 @@
+SUPPORTED_LANGUAGES = [
+        'English',
+        'Hindi',
+        'Japanese',
+        'Chinese',
+        'German',
+        'French',
+        'Arabic',
+        'Persian',
+        'Hebrew',
+        'Greek',
+        'Russian',
+        'Spanish',
+        'Italian',
+        'Tamil',
+        'Kannada',
+]
