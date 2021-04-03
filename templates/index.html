@@ -15,19 +15,19 @@
 			<p class="subtitle is-3">A Machine Learning Based App</p>
 		</div>
 		<div class="block">
-			<div class="box">
+			<div class="box is-relative" style="z-index:2;">
 				<div class="columns">
 				<div class="column">
-					<form action="{{ url_for('get_prediction')}}" method="POST">
+					<form action="{{ url_for('translateApp')}}" method="POST">
 						<div class="select my-1">
-							<select value="source">
-								{% for lang in supp_langs %}
-									<option value="{{lang}}">{{ lang }}</option>
+							<select name="sourceLang">
+								{% for sourceLang in supp_langs %}
+									<option name="{{sourceLang}}" id="{{sourceLang}}" value="{{sourceLang}}">{{ sourceLang }}</option>
 								{% endfor %}
 							</select>
 						</div>
 						<div class="control">
-							<textarea class="textarea has-fixed-size" placeholder="Type..."></textarea>
+							<textarea class="textarea has-fixed-size" placeholder="Type..." name="textToTranslate"></textarea>
 						</div>
 					</div>
 					<button class="button is-rounded is-danger" style="margin-top:80px;" type="submit" value="predict">
@@ -37,20 +37,42 @@
 					</button>
 					<div class="column">
 						<div class="select my-1">
-							<select value="target">
-								{% for lang in supp_langs %}
-									<option value="{{lang}}">{{ lang }}</option>
+							<select name="targetLang">
+								{% for targetLang in supp_langs %}
+									<option name="{{targetLang}}" id="{{targetLang}}" value="{{targetLang}}">{{ targetLang }}</option>
 								{% endfor %}
 							</select>
 						</div>
 				</form>
 					<div class="control">
-						<textarea class="box has-fixed-size" placeholder="Translation..."></textarea>
+						<p class="subtitle is-4">
+							{{transText}}
+						</p>
 					</div>
 				</div>
 			</div>
 		</div>
 		</div>
+		<div class="box has-background-primary is-shadowless is-radiusless" style="margin-top:-30px;">
+			<div>
+				{% for hist_id,_ in history.items() %}
+					<div class="columns">
+						<div class="column">
+							<p class="subtitle has-text-white is-6 pb-2">{{history[hist_id]['src']}}</p>
+							<p class="title has-text-white is-5">{{history[hist_id]['txt']}}</p>
+						</div>
+						<div class="column">
+							<p class="subtitle has-text-white is-6 pb-2">{{history[hist_id]['tgt']}}</p>
+							<p class="title has-text-white is-5">{{history[hist_id]['trans']}}</p>
+						</div>
+					</div>
+					<hr>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="footer">
 	</div>
 </div>
   <script>

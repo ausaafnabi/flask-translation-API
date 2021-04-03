@@ -1,6 +1,6 @@
 import os
 from flask import Flask,request,jsonify,render_template
-from model.translator import Translator 
+from model.translator import Translator,HTTPTranslate 
 from config import *
 SUPPORTED_LANGUAGES = [ 
         'English',
@@ -19,16 +19,34 @@ SUPPORTED_LANGUAGES = [
         'Tamil',
         'Kannada',
 ]
+History = dict()
+HistCount=0
+
 app = Flask(__name__)
 
 translator = Translator(MODEL_PATH)
 
 app.config["DEBUG"] = True # turn off when in production
 
+def saveHistory(source,target,text,translation):
+    global HistCount
+    newHist=dict()
+    newHist["src"], newHist["tgt"], newHist["txt"], newHist["trans"] = source,target,text,translation
+    History[HistCount] = newHist
+    HistCount += 1
+    return History
+
 @app.route('/',methods=["GET","POST"])
 def translateApp():
     if request.method=='GET':
-        return render_template('index.html',supp_langs=SUPPORTED_LANGUAGES)
+        return render_template('index.html',supp_langs=SUPPORTED_LANGUAGES,history=History)
+    else:
+        fromLang = request.form.get('sourceLang')
+        toLang = request.form.get('targetLang')
+        text = request.form.get('textToTranslate')
+        translation = HTTPTranslate(text,toLang,fromLang)
+        log = saveHistory(fromLang,toLang,text,translation)
+        return render_template('index.html',transText=translation,supp_langs=SUPPORTED_LANGUAGES,history=log)
 
 @app.route('/v1/health', methods=["GET"])
 def health_check():
