@@ -2,23 +2,7 @@ import os
 from flask import Flask,request,jsonify,render_template
 from model.translator import Translator,HTTPTranslate 
 from config import *
-SUPPORTED_LANGUAGES = [ 
-        'English',
-        'Hindi',
-        'Japanese',
-        'Chinese',
-        'German',
-        'French',
-        'Arabic',
-        'Persian',
-        'Hebrew',
-        'Greek',
-        'Russian',
-        'Spanish',
-        'Italian',
-        'Tamil',
-        'Kannada',
-]
+
 History = dict()
 HistCount=0
 
@@ -29,6 +13,11 @@ translator = Translator(MODEL_PATH)
 app.config["DEBUG"] = True # turn off when in production
 
 def saveHistory(source,target,text,translation):
+    '''
+    Saves History of the transactions Happened on the WebAPP
+    Input: Source,target,text,translation -> str
+    Output: History -> Dict
+    '''
     global HistCount
     newHist=dict()
     newHist["src"], newHist["tgt"], newHist["txt"], newHist["trans"] = source,target,text,translation
@@ -38,6 +27,10 @@ def saveHistory(source,target,text,translation):
 
 @app.route('/',methods=["GET","POST"])
 def translateApp():
+    '''
+    Index function to render webapp
+    DEPRECIATION WARNING : Works on v0 API
+    '''
     if request.method=='GET':
         return render_template('index.html',supp_langs=SUPPORTED_LANGUAGES,history=History)
     else:
@@ -55,27 +48,33 @@ def health_check():
 
 @app.route('/v1/lang_routes', methods=["GET"])
 def get_lang_route():
+    '''return all the languages routes available'''
     lang = requests.args['lang']
     all_lang = translator.get_supported_langs()
     lang_routes = [la for la in all_langs if la[0]==lang]
-    return jsonify({"output":lang_routes})
+    return jsonify({"language routes":lang_routes})
 
 @app.route('/v1/supported_languages',methods=["GET"])
 def get_supported_languages():
+    '''returns all the supported languages from data'''
     langs = translator.get_supported_langs()
-    return jsonify({"output":langs})
+    return jsonify({"supported languages":langs})
 
 @app.route('/v0/supported_langs',methods=['GET'])
 def supp_langs():
-    return jsonify({"output":SUPPORTED_LANGUAGES})
+    '''v0 API for returning All the supported Languages'''
+    return jsonify({"supported languages":SUPPORTED_LANGUAGES})
 
 @app.route('/v1/translate',methods=["POST"])
 def get_prediction():
+    '''
+    function to return translation based on source and target language
+    '''
     source = request.json['source']
     target = request.json['target']
     text = request.json['text']
     translation = translator.translate(source,target,text)
-    return jsonify({"output":translation})
+    return jsonify({"translation":translation})
 
 app.run(host="0.0.0.0")
 
