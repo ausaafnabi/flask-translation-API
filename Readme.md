@@ -27,13 +27,19 @@ GET v1/supported_languages
 POST v1/translate
 ```
 **Inputs**
+
 'source' : Source Language 
+
 'target' : Target Language
+
 'text' : Text to be transferred
 
 **OUTPUTS**
+
 'translation' : Translated Text
+
 'supported languages' : Languages Supported 
+
 'language routes' : routes to languages
 
 
