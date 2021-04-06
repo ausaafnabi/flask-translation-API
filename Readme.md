@@ -44,8 +44,8 @@ POST v1/translate
 
 
 ## TODO:
-[] Add swagger Doc
-[] API call to download more translators
+- [ ] Add swagger Doc
+- [ ] API call to download more translators
 
 ## Installation / Usage
 * If you wish to run your own build, first ensure you have python3 globally installed in your computer.
